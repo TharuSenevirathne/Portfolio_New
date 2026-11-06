@@ -1,0 +1,8 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+html{scroll-behavior:smooth;background:#1b1b21}
+body{margin:0;background:#1b1b21;color:#d0c8ff;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.02em}
+::selection{background:#6d3fd1;color:#fff}
+.title{font-family:'UnifrakturCook',serif;font-weight:700;color:#d0c8ff;line-height:.9;font-size:clamp(5rem,19vw,17rem);text-align:center}
+.mut{color:#8d8aa3}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}

@@ -1,0 +1,1 @@
+export default {content:['./index.html','./src/**/*.{ts,tsx}'],theme:{extend:{colors:{ink:'#1b1b21',lav:'#d0c8ff',vio:'#6d3fd1'},fontFamily:{black:['"UnifrakturCook"','serif'],mono:['"JetBrains Mono"','monospace']}}}}
