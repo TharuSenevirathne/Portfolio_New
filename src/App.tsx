@@ -3,8 +3,10 @@ import {motion,MotionConfig,useScroll,useSpring} from 'framer-motion';
 import {ArrowUpRight,Github,Linkedin,Mail} from 'lucide-react';
 import {EMAIL,GITHUB,LINKEDIN,intro,projects,exp,skills,edu} from './data';
 
-const NAV=[['info','01','ABOUT'],['archive','02','WORK'],['work','03','PROJECTS'],['contact','04','CONTACT']];
+const NAV=[['info','01','About'],['archive','02','Work'],['work','03','Projects'],['contact','04','Contact']];
 const ease=[0.22,1,0.36,1] as const;
+const CV_PATH='/assets/Tharu_Senevirathne_CV.pdf';
+const CV_FILENAME='Tharu_Senevirathne_CV.pdf';
 
 function Reveal({children,delay=0,className=''}:{children:ReactNode;delay?:number;className?:string}){
   return <motion.div className={className} initial={{opacity:0,y:28}} whileInView={{opacity:1,y:0}} viewport={{once:true,margin:'-10%'}} transition={{duration:.9,ease,delay}}>{children}</motion.div>;
@@ -49,11 +51,19 @@ export default function App(){
       <div className="mx-auto mt-20 grid max-w-4xl gap-10 md:grid-cols-2">
         {intro.map((p,i)=><Reveal key={i} delay={i*.12}><p className="text-[13px] leading-relaxed">{p}</p></Reveal>)}
       </div>
+      <Reveal className="mx-auto mt-10 flex max-w-4xl flex-wrap gap-4">
+        <a href={CV_PATH} target="_blank" rel="noreferrer" className="mut border border-lav/20 px-5 py-2 text-[11px] transition-colors duration-300 hover:text-lav">
+          View CV
+        </a>
+        <a href={CV_PATH} download={CV_FILENAME} className="mut border border-lav/20 px-5 py-2 text-[11px] transition-colors duration-300 hover:text-lav">
+          Download CV
+        </a>
+      </Reveal>
       <Reveal className="mx-auto mt-24 max-w-4xl"><div className="mut mb-4 text-[10px]">EDUCATION</div>
         {edu.map(([a,b],i)=><motion.div key={a} initial={{opacity:0,y:10}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:.7,ease,delay:i*.08}} className="flex flex-col justify-between gap-1 border-t border-lav/15 py-4 md:flex-row"><span>{a}</span><span className="mut">{b}</span></motion.div>)}</Reveal>
     </Section>
 
-    <Section id="archive" title="Archive">
+    <Section id="archive" title="Work">
       <Reveal className="mx-auto mt-20 max-w-4xl">
         <div className="mut mb-4 text-[10px]">EXPERIENCE</div>
         <div className="relative border-l border-vio pl-6">
@@ -68,16 +78,24 @@ export default function App(){
       </Reveal>
     </Section>
 
-    <Section id="work" title="Work">
+    <Section id="work" title="Projects">
       <ul className="mx-auto mt-20 max-w-4xl">
         {projects.map((p,i)=><Reveal key={p.n} delay={.04}><div className="group relative grid grid-cols-[2rem_1fr_auto] items-baseline gap-4 border-t border-lav/15 py-6 transition-colors hover:bg-lav/5 md:grid-cols-[3rem_1.2fr_1.5fr_auto]">
           <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-px origin-top scale-y-0 bg-vio transition-transform duration-500 ease-out group-hover:scale-y-100"/>
           <span className="mut">0{i+1}</span>
-          <a href={p.url} target="_blank" rel="noreferrer" className="font-black text-2xl text-lav transition-transform duration-500 group-hover:translate-x-2 md:text-3xl">{p.title}</a>
+          {p.url
+            ? <a href={p.url} target="_blank" rel="noreferrer" className="break-words font-black text-2xl text-lav transition-transform duration-500 group-hover:translate-x-2 md:text-3xl">{p.title}</a>
+            : <span className="break-words font-black text-2xl text-lav md:text-3xl">{p.title}</span>}
           <span className="mut col-span-3 col-start-2 md:col-span-1 md:col-start-auto">{p.d}</span>
           <span className="col-span-3 col-start-2 flex items-center gap-4 md:col-span-1 md:col-start-auto md:justify-self-end"><span className="mut">{p.lang}</span>
-            <a href={p.url} target="_blank" rel="noreferrer" aria-label={`${p.title} on GitHub`} className="group/l flex items-center gap-1 transition-colors hover:text-white">GITHUB<ArrowUpRight size={14} className="transition-transform duration-300 group-hover/l:-translate-y-0.5 group-hover/l:translate-x-0.5"/></a>
-            {p.live&&<a href={p.live} target="_blank" rel="noreferrer" aria-label={`${p.title} live demo`} className="group/l flex items-center gap-1 transition-colors hover:text-white">LIVE<ArrowUpRight size={14} className="transition-transform duration-300 group-hover/l:-translate-y-0.5 group-hover/l:translate-x-0.5"/></a>}
+            {p.githubLinks?.length
+              ? p.githubLinks.map(link=><a key={link.label} href={link.url} target="_blank" rel="noreferrer" aria-label={`${p.title} ${link.label}`} className="group/l flex items-center gap-1 transition-colors hover:text-white">{link.label}<ArrowUpRight size={14} className="transition-transform duration-300 group-hover/l:-translate-y-0.5 group-hover/l:translate-x-0.5"/></a>)
+              : p.url
+              ? <a href={p.url} target="_blank" rel="noreferrer" aria-label={`${p.title} on GitHub`} className="group/l flex items-center gap-1 transition-colors hover:text-white">GITHUB<ArrowUpRight size={14} className="transition-transform duration-300 group-hover/l:-translate-y-0.5 group-hover/l:translate-x-0.5"/></a>
+              : <span className="mut" title={p.repoNote ?? 'GitHub repo unavailable'}>GITHUB N/A</span>}
+            {p.live
+              ? <a href={p.live} target="_blank" rel="noreferrer" aria-label={`${p.title} live demo`} className="group/l flex items-center gap-1 transition-colors hover:text-white">LIVE<ArrowUpRight size={14} className="transition-transform duration-300 group-hover/l:-translate-y-0.5 group-hover/l:translate-x-0.5"/></a>
+              : <span className="mut" title={p.liveNote ?? 'Live URL unavailable'}>LIVE N/A</span>}
           </span>
         </div></Reveal>)}
         <li className="border-t border-lav/15 pt-6"><a className="mut transition-colors duration-300 hover:text-lav" href={`${GITHUB}?tab=repositories`} target="_blank" rel="noreferrer">ALL REPOSITORIES ON GITHUB ↗</a></li>
